@@ -672,9 +672,172 @@ public class Z80Cpu {
         case 0x48:
             /*
              * LD C, B
-             * Lodas value of B into C
+             * Lodas value of C into C
              */
             this.c = this.b;
+            break;
+        case 0x49:
+            /*
+             * LD C, C
+             * Loads value of C into C
+             */
+            this.c = this.c;
+            break;
+        case 0x4a:
+            /*
+             * LD C, D
+             * Loads value of D into C
+             */
+            this.c = this.d;
+            break;
+        case 0x4b:
+            /*
+             * LD C, E
+             * Loads value of E into C
+             */
+            this.c = this.e;
+            break;
+        case 0x4c:
+            /*
+             * LD C, H
+             * Loads value of H into C
+             */
+            this.c = this.h;
+            break;
+        case 0x4d:
+            /*
+             * LD C, L
+             * Loads value of L into C
+             */
+            this.c = this.l;
+            break;
+        case 0x4e:
+            /*
+             * LD C, (HL)
+             * Loads value stored in memory address HL into C
+             */
+            this.c = this.mem[this.getHL()];
+            break;
+        case 0x4f:
+            /*
+             * LD C, A
+             */
+            this.c = this.a;
+            break;
+        // </editor-fold>
+        
+        // <editor-fold>
+        case 0x50:
+            /*
+             * LD D, B
+             * Loads value of B into D
+             */
+            this.d = this.b;
+            break;
+        case 0x51:
+            /*
+             * LD D, C
+             * Loads value of C into D
+             */
+            this.d = this.c;
+            break;
+        case 0x52:
+            /*
+             * LD D, D
+             * Loads value of D into D
+             */
+            this.d = this.d;
+            break;
+        case 0x53:
+            /*
+             * LD D, E
+             * Loads value of E into D
+             */
+            this.d = this.e;
+            break;
+        case 0x54:
+            /*
+             * LD D, H
+             * Loads value of H into D
+             */
+            this.d = this.h;
+            break;
+        case 0x55:
+            /*
+             * LD D, L
+             * Loads value of L into D
+             */
+            this.d = this.l;
+            break;
+        case 0x56:
+            /*
+             * LD D, (HL)
+             * Loads value at memory address HL into D
+             */
+            this.d = this.mem[this.getHL()];
+            break;
+        case 0x57:
+            /*
+             * LD D, A
+             * Loads value of A into D
+             */
+            this.d = this.a;
+            break;
+        case 0x58:
+            /*
+             * LD E, B
+             * Loads value of B into E
+             */
+            this.e = this.b;
+            break;
+        case 0x59:
+            /*
+             * LD E, C
+             * Loads value of C into E
+             */
+            this.e = this.c;
+            break;
+        case 0x5a:
+            /*
+             * LD E, D
+             * Loads value of D into E
+             */
+            this.e = this.d;
+            break;
+        case 0x5b:
+            /*
+             * LD E, E
+             * Loads value of E into E
+             */
+            this.e = this.e;
+            break;
+        case 0x5c:
+            /*
+             * LD E, H
+             * Loads value of H into E
+             */
+            this.e = this.h;
+            break;
+        case 0x5d:
+            /*
+             * LD E, L
+             * Loads value of L into E
+             */
+            this.e = this.l;
+            break;
+        case 0x5e:
+            /*
+             * LD E, (HL)
+             * Loads value at memory address HL into E
+             */
+            this.e = this.mem[this.getHL()];
+            break;
+        case 0x5f:
+            /*
+             * LD E, A
+             * Loads value of A into E
+             */
+            this.e = this.a;
             break;
         // </editor-fold>
 
