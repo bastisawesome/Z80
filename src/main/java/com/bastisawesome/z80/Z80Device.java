@@ -5,13 +5,15 @@
  */
 package com.bastisawesome.z80;
 
+import com.bastisawesome.generics.Memory;
+
 /**
  * Class that contains all of the necessary pieces for a functional Z80. This
  * class handles integrating each piece together.
  * @author bast
  */
 public class Z80Device {
-    private Z80Memory memDevice;
+    private Memory memDevice;
     private byte[] romDevice;
     private Z80Cpu cpuDevice;
     
@@ -19,7 +21,7 @@ public class Z80Device {
         this(new byte[8000], new Z80Memory(), new Z80Cpu());
     }
     
-    public Z80Device(Z80Memory mem) {
+    public Z80Device(Memory mem) {
         this(new byte[8000], mem, new Z80Cpu());
     }
     
@@ -31,7 +33,7 @@ public class Z80Device {
         this(rom, new Z80Memory(), new Z80Cpu());
     }
     
-    public Z80Device(byte[] rom, Z80Memory mem, Z80Cpu cpu) {
+    public Z80Device(byte[] rom, Memory mem, Z80Cpu cpu) {
         this.memDevice = mem;
         this.romDevice = rom;
         this.cpuDevice = cpu;
@@ -39,7 +41,17 @@ public class Z80Device {
         loadRomToMemory();
     }
     
+    public void run() {
+        while(true) {
+            this.cpuDevice.exe(this.memDevice);
+        }
+    }
+    
+    public void runOnce() {
+        this.cpuDevice.exe(this.memDevice);
+    }
+    
     private void loadRomToMemory() {
-        this.memDevice.addToMem(this.romDevice, 0);
+        this.memDevice.addToMem(this.romDevice, (short)0);
     }
 }

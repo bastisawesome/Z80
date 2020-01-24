@@ -21,6 +21,7 @@ public class Z80Memory extends Memory {
 		}
 	}
 	
+    @Override
 	public byte[] getMem() {
 		return this.mem;
 	}
@@ -29,8 +30,18 @@ public class Z80Memory extends Memory {
 		this.mem = mem;
 	}
     
-    public void addToMem(byte[] mem, int index) {
+    public void addToMem(byte[] mem, short index) {
         System.arraycopy(mem, 0, this.mem, index, mem.length);
+    }
+    
+    @Override
+    public byte get(short index) {
+        return this.mem[index];
+    }
+    
+    @Override
+    public void set(short index, byte value) {
+        this.mem[index] = value;
     }
 
 }

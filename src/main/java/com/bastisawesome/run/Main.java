@@ -1,10 +1,9 @@
 package com.bastisawesome.run;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import com.bastisawesome.gui.MemoryWindow;
 import com.bastisawesome.z80.Z80Cpu;
+
+import com.bastisawesome.z80.Z80Device;
 import com.bastisawesome.z80.Z80Memory;
 
 public class Main {
@@ -51,21 +50,11 @@ public class Main {
 		rom[45] = 0x01;			// Low 8 bits of 280
 		rom[46] = 0x18;			// High 8 bits of 280
 		rom[7999] = 0x76; // HALT
+        
+        Z80Device z80 = new Z80Device(rom, mem, new Z80Cpu());
 		
-		if(rom[0] == 0) {
-			try {
-                mem.setMem(Files.readAllBytes(Paths.get("roms/djnz.rom")));
-			} catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-			}
-		} else {
-            mem.setMem(rom);
-		}
-		Z80Cpu cpu = new Z80Cpu();
-		while(true) {
-			cpu.exe(mem);
-		}
+        MemoryWindow memWin = new MemoryWindow(z80);
+        memWin.setVisible(true);
 	}
 
 }
