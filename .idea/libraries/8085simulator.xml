@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="8085simulator">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../8085simulator/8085Compiler_v1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../8085simulator/8085Compiler_v0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -50,6 +50,10 @@ public class Z80Device {
     public void runOnce() {
         this.cpuDevice.exe(this.memDevice);
     }
+
+    public Memory getMemory() {
+        return this.memDevice;
+    }
     
     private void loadRomToMemory() {
         this.memDevice.addToMem(this.romDevice, (short)0);

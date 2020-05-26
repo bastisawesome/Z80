@@ -1,14 +1,44 @@
 package com.bastisawesome.run;
 
-import com.bastisawesome.gui.MemoryWindow;
+import com.bastisawesome.views.MemoryWindow;
 import com.bastisawesome.z80.Z80Cpu;
-
 import com.bastisawesome.z80.Z80Device;
 import com.bastisawesome.z80.Z80Memory;
 
-public class Main {
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import java.awt.Dimension;
+
+public class Main implements Runnable {
+	private Z80Device z80;
 
 	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Main());
+	}
+
+	public void run() {
+		this.z80 = initZ80();
+		JFrame mainWindow = initUI();
+
+		mainWindow.setVisible(true);
+	}
+
+	private JFrame initUI() {
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setTitle("Z80 Emulator");
+		frame.setSize(new Dimension(400, 600));
+
+		JFrame memoryFrame = new MemoryWindow(this.z80).initUI();
+
+		frame.getContentPane().add(memoryFrame);
+		memoryFrame.show();
+
+		return frame;
+	}
+
+	private Z80Device initZ80() {
 		Z80Memory mem = new Z80Memory();
 		byte[] rom = new byte[8000];
 		// This is a really simple program.
@@ -49,12 +79,9 @@ public class Main {
 		rom[31] = 0x34;			// INC (HL)
 		rom[45] = 0x01;			// Low 8 bits of 280
 		rom[46] = 0x18;			// High 8 bits of 280
-		rom[7999] = 0x76; // HALT
-        
-        Z80Device z80 = new Z80Device(rom, mem, new Z80Cpu());
-		
-        MemoryWindow memWin = new MemoryWindow(z80);
-        memWin.setVisible(true);
+		rom[7999] = 0x76; 		// HALT
+
+		return new Z80Device(rom, mem, new Z80Cpu());
 	}
 
 }

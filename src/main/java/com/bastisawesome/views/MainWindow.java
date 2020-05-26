@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bastisawesome.gui;
+package com.bastisawesome.views;
 
-import javax.swing.JFrame;
+import com.bastisawesome.z80.Z80Device;
 
 /**
  *
  * @author bast
  */
-public class MainWindow extends JFrame {
-    
+public class MainWindow {
 }
