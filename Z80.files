@@ -1,0 +1,10 @@
+.astylerc
+.gitignore
+old/main/java/com/bastisawesome/controllers/MemoryWindowController.java
+old/main/java/com/bastisawesome/generics/Memory.java
+old/main/java/com/bastisawesome/run/Main.java
+old/main/java/com/bastisawesome/views/MainWindow.java
+old/main/java/com/bastisawesome/views/MemoryWindow.java
+old/main/java/com/bastisawesome/z80/Z80Cpu.java
+old/main/java/com/bastisawesome/z80/Z80Device.java
+old/main/java/com/bastisawesome/z80/Z80Memory.java
