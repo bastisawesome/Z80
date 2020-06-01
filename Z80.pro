@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++17 console
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -18,13 +18,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    z80/Z80.cpp
+    z80/Z80.cpp \
+    z80/Z80Cpu.cpp \
+    z80/Z80Mem.cpp \
+    z80/Z80Register.cpp
 
 HEADERS += \
+    generics/helpers.h \
+    generics/ops.h \
     generics/types.h \
     mainwindow.h \
-    z80/Z80.h \
-    generics/types.h
+    z80/Z80.h
 
 FORMS += \
     mainwindow.ui
@@ -51,3 +55,6 @@ DISTFILES += \
     old/main/java/com/bastisawesome/z80/Z80Cpu.java \
     old/main/java/com/bastisawesome/z80/Z80Device.java \
     old/main/java/com/bastisawesome/z80/Z80Memory.java
+
+# Custom definitions
+Debug: DEFINES += Z80_DEBUG
