@@ -36,9 +36,12 @@ private:
     flag_t flagS; // Sign flag
     flag_t flagX; // Unused
 
+    uint8_t opcode; // Stored here for debug information
+
     /* ********CPU Information******** */
     const unsigned int _4MHZ = 4000000; // CPU clock speed
     unsigned int cycles; // Number of cycles for current instruction
+    bool running = true;
 
     // Cycles per instruction, stored based on opcode value
     std::array<uint8_t, 0xFF> instructionCycles;
@@ -46,7 +49,7 @@ private:
     std::array<std::array<uint8_t, 0xFF>, 0xFF> tStates;
 
     /* ********Hardware Devices******** */
-    std::array<uint8_t, 20> mem;
+    std::array<uint8_t, 0xFF> mem;
     std::array<uint8_t, 10> rom;
 
     /* ********ROM functions******** */
@@ -54,9 +57,39 @@ private:
 
     /* ********CPU functions******** */
     void execInstruction();
+    uint16_t read2Bytes(uint16_t counter);
+    void setFlagsSZPV(unsigned int i);
+    bool parity(uint8_t b);
+    void jump(bool flag);
+    void setFlagH(uint8_t b1, uint8_t b2);
+    void setFlagH(uint16_t b1, uint16_t b2);
+    void setFlagHSub(uint8_t b1, uint8_t b2);
+    void incr(uint8_t &b);
+    void decr(uint8_t &b);
+
+    /* ********Register functions******** */
+    uint16_t combineRegisters(register8_t a, register8_t b);
+    void addHL(uint16_t value);
+    void setBC(uint16_t value);
+    uint16_t getBC();
+    void setDE(uint16_t value);
+    uint16_t getDE();
+    void setHL(uint16_t value);
+    uint16_t getHL();
+    void setAF(uint16_t value);
+    uint16_t getAF();
+    void setBCP(uint16_t value);
+    uint16_t getBCP();
+    void setDEP(uint16_t value);
+    uint16_t getDEP();
+    void setHLP(uint16_t value);
+    uint16_t getHLP();
+    void setAFP(uint16_t value);
+    uint16_t getAFP();
 
     /* ********Debug functions******** */
     void print_debug();
+    void warnUnsupportedOpcode(uint8_t opcode);
 
 public:
     Z80(std::array<uint8_t, 10> rom);
@@ -65,9 +98,9 @@ public:
     void run();
 
     /* ********Mem functions******** */
-    std::array<uint8_t, 20> getMem();
+    std::array<uint8_t, 0xFF> getMem();
     uint8_t getMem(uint16_t index);
-    void setMem(std::array<uint8_t, 20> mem);
+    void setMem(std::array<uint8_t, 0xFF> mem);
     void setMem(uint8_t index, uint8_t value);
     void addToMem(std::array<uint8_t, 20> mem, uint16_t index);
 };
