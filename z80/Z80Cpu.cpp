@@ -210,3 +210,11 @@ void Z80::decr(uint8_t &b) {
     this->setFlagsSZPV(result);
     b = (uint8_t)result;
 }
+
+void Z80::addHL(uint16_t value) {
+    unsigned int result = this->getHL() + value;
+    this->flagC = (result >> 16) != 0;
+    this->setFlagH(this->getHL(), value);
+    this->flagN = false;
+    this->setHL((uint16_t)result);
+}

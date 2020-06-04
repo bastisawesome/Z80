@@ -10,14 +10,27 @@ class Z80 {
 private:
     /* ********Registers******** */
     // General purpose registers
-    register8_t b, c, d, e, h, l;
-    register8_t a; // Accumulator
-    register8_t f; // Flag
+    pair af, bc, de, hl;
+    // References to general purpose registers
+    uint8_t &a = af.b.high;
+    uint8_t &f = af.b.low;
+    uint8_t &b = bc.b.high;
+    uint8_t &c = bc.b.low;
+    uint8_t &d = de.b.high;
+    uint8_t &e = de.b.low;
+    uint8_t &h = hl.b.high;
+    uint8_t &l = hl.b.low;
 
     // Alternate register set
-    register8_t bp, cp, dp, ep, hp, lp;
-    register8_t ap; // Alternate accumulator
-    register8_t fp; // Alternate flag
+    pair afp, bcp, dep, hlp;
+    uint8_t &ap = afp.b.high,
+             &fp = afp.b.low,
+              &bp = bcp.b.high,
+               &cp = bcp.b.low,
+                &dp = dep.b.high,
+                 &ep = dep.b.low,
+                  &hp = hlp.b.high,
+                   &lp = hlp.b.low;
 
     // Special purpose registers
     register16_t pc, sp; // Program counter/stack pointer
@@ -28,13 +41,14 @@ private:
     /* ********Flags******** */
     // Documentation provided by the Zilog Z80 hardware manual
     // Link: http://home.mit.bme.hu/~benes/oktatas/dig-jegyz_052/Z80.pdf
-    flag_t flagC; // Carry flag
-    flag_t flagN; // Add/Subtract
+    flag_t flagC;  // Carry flag
+    flag_t flagN;  // Add/Subtract
     flag_t flagPV; // Parity/Overflow
-    flag_t flagH; // Half carry flag
-    flag_t flagZ; // Zero flag
-    flag_t flagS; // Sign flag
-    flag_t flagX; // Unused
+    flag_t flagX;  // Unused
+    flag_t flagH;  // Half carry flag
+    flag_t flagY;  // Unused
+    flag_t flagZ;  // Zero flag
+    flag_t flagS;  // Sign flag
 
     uint8_t opcode; // Stored here for debug information
 
@@ -68,24 +82,7 @@ private:
     void decr(uint8_t &b);
 
     /* ********Register functions******** */
-    uint16_t combineRegisters(register8_t a, register8_t b);
     void addHL(uint16_t value);
-    void setBC(uint16_t value);
-    uint16_t getBC();
-    void setDE(uint16_t value);
-    uint16_t getDE();
-    void setHL(uint16_t value);
-    uint16_t getHL();
-    void setAF(uint16_t value);
-    uint16_t getAF();
-    void setBCP(uint16_t value);
-    uint16_t getBCP();
-    void setDEP(uint16_t value);
-    uint16_t getDEP();
-    void setHLP(uint16_t value);
-    uint16_t getHLP();
-    void setAFP(uint16_t value);
-    uint16_t getAFP();
 
     /* ********Debug functions******** */
     void print_debug();

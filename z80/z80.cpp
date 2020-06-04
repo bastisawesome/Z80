@@ -14,12 +14,11 @@
  */
 
 Z80::Z80(std::array<uint8_t, 10> rom):
-    b(0), c(0), d(0), e(0), h(0), l(0),
-    a(0), f(0),
-    bp(0), cp(0), dp(0), ep(0), hp(0), lp(0),
-    ap(0), fp(0),
+    af(0), bc(0), de(0), hl(0),
+    afp(0), bcp(0), dep(0), hlp(0),
     pc(0), sp(0), ix(0), iy(0), i(0), r(0),
-    flagC(0), flagN(0), flagPV(0), flagH(0), flagZ(0), flagS(0), flagX(0),
+    flagC(0x01), flagN(0x02), flagPV(0x04), flagX(0x08),
+    flagH(0x10), flagY(0x20), flagZ(0x40), flagS(0x80),
     cycles(0) {
     this->rom = rom;
     this->loadRomToMemory();

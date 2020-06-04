@@ -20,8 +20,7 @@ SOURCES += \
     mainwindow.cpp \
     z80/Z80.cpp \
     z80/Z80Cpu.cpp \
-    z80/Z80Mem.cpp \
-    z80/Z80Register.cpp
+    z80/Z80Mem.cpp
 
 HEADERS += \
     generics/helpers.h \
