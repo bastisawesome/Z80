@@ -17,7 +17,7 @@ void Z80::setMem(uint8_t index, uint8_t value) {
     this->mem[index] = value;
 }
 
-void Z80::addToMem(std::array<uint8_t, 20> mem,
+void Z80::addToMem(std::array<uint8_t, 0xFF> mem,
                    uint16_t index) {
     // Temp solution until I can do better things
     for(size_t i=0; i<mem.size(); i++) {

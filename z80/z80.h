@@ -64,7 +64,7 @@ private:
 
     /* ********Hardware Devices******** */
     std::array<uint8_t, 0xFF> mem;
-    std::array<uint8_t, 10> rom;
+    std::array<uint8_t, 0x7F> rom;
 
     /* ********ROM functions******** */
     void loadRomToMemory();
@@ -89,7 +89,7 @@ private:
     void warnUnsupportedOpcode(uint8_t opcode);
 
 public:
-    Z80(std::array<uint8_t, 10> rom);
+    Z80(std::array<uint8_t, 0x7F> rom);
 
     /* ********CPU functions******** */
     void run();
@@ -99,7 +99,7 @@ public:
     uint8_t getMem(uint16_t index);
     void setMem(std::array<uint8_t, 0xFF> mem);
     void setMem(uint8_t index, uint8_t value);
-    void addToMem(std::array<uint8_t, 20> mem, uint16_t index);
+    void addToMem(std::array<uint8_t, 0xFF> mem, uint16_t index);
 };
 
 #endif // Z80_H

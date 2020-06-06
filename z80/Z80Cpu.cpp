@@ -141,6 +141,35 @@ void Z80::execInstruction() {
         this->flagH = false;
         break;
 
+    /* ********0x10-0x1F******** */
+    case 0x10:
+        /*
+         * DJNZ, N
+         * Register B is decremented. If the value left is not zero, the signed
+         * value N is added to PC.
+         */
+        this->b--;
+        if(this->b == 0)
+            this->pc++;
+        else
+            this->pc = this->mem[pc++];
+        break;
+    case 0x11:
+        /*
+         * LD DE, NN
+         * Loads 16-bit value into register pair DE.
+         */
+        this->de.w = read2Bytes(this->pc);
+        this->pc += 2;
+        break;
+    case 0x12:
+        /*
+         * LD (DE), A
+         * Loads the value of A into memory address pointed to by DE.
+         */
+        this->mem[this->de.w] = this->a;
+        break;
+
     case 0x76:
         // HALT
         // For now this kills the CPU, but in the future there will
