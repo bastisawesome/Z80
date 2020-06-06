@@ -13,7 +13,7 @@
  * Constructors and helper functions for the Z80 class.
  */
 
-Z80::Z80(std::array<uint8_t, 10> rom):
+Z80::Z80(std::array<uint8_t, 0x7F> rom):
     af(0), bc(0), de(0), hl(0),
     afp(0), bcp(0), dep(0), hlp(0),
     pc(0), sp(0), ix(0), iy(0), i(0), r(0),
@@ -49,8 +49,9 @@ void Z80::print_debug() {
         if(i < 0xf) out << " | ";
     }
     out << "\n";
-    for(size_t i=0; i<this->mem.size(); i+=0xf) {
-        out << printHex(i / 0xf) << " | ";
+
+    for(size_t i=0; i<this->mem.size(); i+=0x10) {
+        out << printHex(i / 0x10) << " | ";
         for(unsigned int j=i; j<=0xf+i && j<this->mem.size(); j++) {
             out << printHex(this->mem[j]);
             if(j != 0xf+i && j != this->mem.size()-1) out << " | ";
