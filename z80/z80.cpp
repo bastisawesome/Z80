@@ -71,12 +71,9 @@ void Z80::print_debug() {
     out << "Register L: " << printHex(this->l) << "\n";
 
     // Register pairs
-    out << "Register BC: " << printHex(combineRegisters(this->b, this->c), 4)
-        << "\n";
-    out << "Register DE: " << printHex(combineRegisters(this->d, this->e), 4)
-        << "\n";
-    out << "Register HL: " << printHex(combineRegisters(this->h, this->l), 4)
-        << "\n";
+    out << "Register BC: " << printHex(this->bc, 4) << "\n";
+    out << "Register DE: " << printHex(this->de, 4) << "\n";
+    out << "Register HL: " << printHex(this->hl, 4) << "\n";
 
     // Alternate registers
     out << "Alt Register B: " << printHex(this->bp) << "\n";
@@ -87,12 +84,9 @@ void Z80::print_debug() {
     out << "Alt Register L: " << printHex(this->lp) << "\n";
 
     // Alternate register pairs
-    out << "Alt Register BC: " << printHex(combineRegisters(this->bp, this->cp), 4)
-        << "\n";
-    out << "Alt Register DE: " << printHex(combineRegisters(this->dp, this->ep), 4)
-        << "\n";
-    out << "Alt Register HL: " << printHex(combineRegisters(this->hp, this->lp), 4)
-        << "\n";
+    out << "Alt Register BC: " << printHex(this->bcp, 4) << "\n";
+    out << "Alt Register DE: " << printHex(this->dep, 4) << "\n";
+    out << "Alt Register HL: " << printHex(this->hlp, 4) << "\n";
 
     // Special-purpose registers
     out << "Accumulator: " << printHex(this->a) << "\n";

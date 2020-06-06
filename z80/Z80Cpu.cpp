@@ -28,7 +28,7 @@ void Z80::execInstruction() {
          * LD BC, NN
          * Loads value NN into register pair BC
          */
-        this->setBC(this->read2Bytes(pc));
+        this->bc.w = this->read2Bytes(pc);
         this->pc += 2;
         break;
     case 0x02:
@@ -36,14 +36,14 @@ void Z80::execInstruction() {
          * LD (BC), A
          * Stores value of A into memory address BC
          */
-        this->mem[getBC()] = this->a;
+        this->mem[this->bc.w] = this->a;
         break;
     case 0x03:
         /*
          * INC BC
          * Increment register pair BC
          */
-        this->setBC(getBC()+1);
+        this->bc.w++;
         break;
     case 0x04:
         /*
@@ -83,9 +83,9 @@ void Z80::execInstruction() {
          * Exchanges the contents of AF and AF'
          */
     {
-        uint16_t tmp = this->getAF();
-        this->setAF(this->getAFP());
-        this->setAFP(tmp);
+        uint16_t tmp = this->af.w;
+        this->af.w = this->afp.w;
+        this->afp.w = tmp;
         break;
     }
     case 0x09:
@@ -93,21 +93,21 @@ void Z80::execInstruction() {
          * ADD HL, BC
          * BC is added to HL
          */
-        this->addHL(this->getBC());
+        this->addHL(this->bc.w);
         break;
     case 0x0A:
         /*
          * LD A, (BC)
          * Loads value pointed to by BC into A
          */
-        this->a = this->mem[this->getBC()];
+        this->a = this->mem[this->bc.w];
         break;
     case 0x0B:
         /*
          * DEC BC
          * Decreases value of BC by 1
          */
-        this->setBC(this->getBC()-1);
+        this->bc.w--;
         break;
     case 0x0C:
         /*
@@ -212,9 +212,9 @@ void Z80::decr(uint8_t &b) {
 }
 
 void Z80::addHL(uint16_t value) {
-    unsigned int result = this->getHL() + value;
+    unsigned int result = this->hl.w + value;
     this->flagC = (result >> 16) != 0;
-    this->setFlagH(this->getHL(), value);
+    this->setFlagH(this->hl.w, value);
     this->flagN = false;
-    this->setHL((uint16_t)result);
+    this->hl.w = ((uint16_t)result);
 }

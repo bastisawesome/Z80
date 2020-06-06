@@ -9,9 +9,6 @@
  * TODO:
  * Document Z80.cpp
  * Implement instructions
- * Implement debug functions
- * Implement run
- * Store opcode names for debug output
  */
 
 int main(int argc, char *argv[]) {
@@ -22,8 +19,8 @@ int main(int argc, char *argv[]) {
 
     std::array<uint8_t, 10> rom = {
         0x01,               // LD BC
-        0x00,               // Upper 0xB
-        0xB,                // Lower 0xB
+        0xB0,               // Lower 0xB
+        0x00,                // Upper 0xB
         0x02,               // LD (BC), A
         0x76                // HALT
     };
