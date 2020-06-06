@@ -35,18 +35,18 @@ union pair {
     // Big-Endian base for architectures like PowerPC.
 #ifdef BE_BASE
     struct {
-        uint8_t low, high;
-    } b;
-    struct {
-        int8_t low, high;
-    } sb;
-#else
-    // Separate between signed and unsigned byte.
-    struct {
         uint8_t high, low;
     } b;
     struct {
         int8_t high, low;
+    } sb;
+#else
+    // Separate between signed and unsigned byte.
+    struct {
+        uint8_t low, high;
+    } b;
+    struct {
+        int8_t low, high;
     } sb;
 #endif
     // Separate between signed and unsigned word.
