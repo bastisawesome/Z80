@@ -9,6 +9,8 @@
  * TODO:
  * Document Z80.cpp
  * Implement instructions
+ * Assign flag masks outside of constructor
+ * FIX ADDHL, IT'S A BROKEN MESS RIGHT NOW (FLAGS ARE SHIT)
  */
 
 int main(int argc, char *argv[]) {
@@ -21,7 +23,7 @@ int main(int argc, char *argv[]) {
     // Beyond that is data. HALT MUST be kept at 0x3F to prevent
     // the CPU from reading data as opcodes.
     std::array<uint8_t, 0x7F> rom = {
-        0x00,               // NOP              | 0x00
+        0xFF,               // NOP              | 0x00
         0x00,               // NOP              | 0x01
         0x01,               // LD BC            | 0x02
         0x40,               // Lower 0x40 (64)  | 0x03
