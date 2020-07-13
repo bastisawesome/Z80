@@ -27,7 +27,7 @@ typedef unsigned short register16_t; // 16-bit register
 typedef unsigned char flag_t;
 
 /**
-  * @brief PAIR
+  * @brief pair
   * Union to manage the register pairs used by the Z80.
   * Contains code for future support of big-endian processors.
   */
