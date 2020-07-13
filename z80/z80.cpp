@@ -91,13 +91,13 @@ void Z80::print_debug() {
 
     // Special-purpose registers
     out << "Accumulator: " << printHex(this->a) << "\n";
-    out << "Flags: " << printHex(this->f) << "\n";
-    out << "\tC: " << printHex(this->flagC) << "\n";
-    out << "\tN: " << printHex(this->flagN) << "\n";
-    out << "\tPV: " << printHex(this->flagPV) << "\n";
-    out << "\tH: " << printHex(this->flagH) << "\n";
-    out << "\tZ: " << printHex(this->flagZ) << "\n";
-    out << "\tS: " << printHex(this->flagS) << "\n";
+    out << "Flags: " << printBin(this->f) << "\n";
+    out << "\tC: " << printHex(this->f & this->flagC) << "\n";
+    out << "\tN: " << printHex(this->f & this->flagN) << "\n";
+    out << "\tPV: " << printHex(this->f & this->flagPV) << "\n";
+    out << "\tH: " << printHex(this->f & this->flagH) << "\n";
+    out << "\tZ: " << printHex(this->f & this->flagZ) << "\n";
+    out << "\tS: " << printHex(this->f & this->flagS) << "\n";
     out << "\tX(unused): " << printHex(this->flagX) << "\n";
     out << "PC: " << printHex(this->pc, 4) << "\n";
     out << "SP: " << printHex(this->sp, 4) << "\n";
@@ -123,12 +123,10 @@ void Z80::print_debug() {
 }
 #endif
 
-void Z80::warnUnsupportedOpcode(uint8_t opcode) {
+void Z80::warnUnsupportedOpcode() {
     // Setup formatting for the program counter
-    std::cout << std::hex << std::showbase << std::internal <<
-              std::setfill('0');
-    std::cout << std::setw(6) << this->pc-1 << " Unsupported operation " <<
-              std::setw(4) << +opcode << "\n";
+    std::cout << printHex(this->pc-1, 4) << " Unsupported operation "
+              << printHex(this->opcode, 2) << "\n";
 
     // Reset formatting
     std::cout << std::dec;
