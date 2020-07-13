@@ -6,6 +6,17 @@
 
 #include "types.h"
 
+// Z80 flag offsets
+// These are used when setting specific bits in the flag register
+#define C_OFFSET 0
+#define N_OFFSET 1
+#define PV_OFFSET 2
+#define X_OFFSET 3
+#define H_OFFSET 4
+#define Y_OFFSET 5
+#define Z_OFFSET 6
+#define S_OFFSET 7
+
 class Z80 {
 private:
     /* ********Registers******** */
@@ -71,6 +82,8 @@ private:
 
     /* ********CPU functions******** */
     void execInstruction();
+    uint8_t readByte();
+    uint8_t readByte(uint16_t counter);
     uint16_t read2Bytes(uint16_t counter);
     void setFlagsSZPV(unsigned int i);
     bool parity(uint8_t b);
@@ -86,7 +99,7 @@ private:
 
     /* ********Debug functions******** */
     void print_debug();
-    void warnUnsupportedOpcode(uint8_t opcode);
+    void warnUnsupportedOpcode();
 
 public:
     Z80(std::array<uint8_t, 0x7F> rom);
