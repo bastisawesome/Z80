@@ -64,18 +64,17 @@ void Z80::execInstruction() {
          * LD B, N
          * Loads byte into B
          */
-        this->b = this->mem[this->pc++];
+        this->b = readByte();
         break;
     case 0x07:
         /*
          * RLCA
-         * Rotates A left one bit. Contents of bit 6 are copied to carry.
+         * Rotates A left one bit. Contents of bit 7 are copied to carry.
          * Flags H and N are reset.
          */
-        this->flagC = ((this->a & 0x80) != 0);
-        this->a = (uint8_t)((this->a << 1) | (this->a >> 7));
-        this->flagH = false;
-        this->flagN = false;
+        this->a = (this->a << 1) | (this->a >> 7);
+        this->f = (this->f & (this->flagS | this->flagZ | this->flagPV)) |
+                  (this->a & (this->flagY | this->flagX | this->flagC));
         break;
     case 0x08:
         /*
@@ -100,7 +99,7 @@ void Z80::execInstruction() {
          * LD A, (BC)
          * Loads value pointed to by BC into A
          */
-        this->a = this->mem[this->bc.w];
+        this->a = readByte(this->bc.w);
         break;
     case 0x0B:
         /*
@@ -128,17 +127,29 @@ void Z80::execInstruction() {
          * LD C, N
          * Loads byte into C
          */
-        this->c = this->mem[this->pc++];
+        this->c = readByte();
         break;
     case 0x0F:
         /*
-         * RRLCA
+         * RRCA
          * The contents of A are rotated right one bit.
          * Bit 0 is copied into bit 7 and the carry flag.
+         * Flags N and H are reset.
          */
-        this->flagC = ((this->a&0x80) != 0);
         this->a = (uint8_t)((this->a>>1) | (this->a<<7));
-        this->flagH = false;
+
+        /* flag f:
+         * 0: C -> A bit 0
+         * 1: N
+         * 2: P/V
+         * 3: X
+         * 4: H reset
+         * 5: X
+         * 6: Z
+         * 7: S
+         */
+        this->f = (this->f & (this->flagPV | this->flagS | this->flagZ)) |
+                  (this->a & (this->flagC << 8));
         break;
 
     /* ********0x10-0x1F******** */
@@ -152,7 +163,7 @@ void Z80::execInstruction() {
         if(this->b == 0)
             this->pc++;
         else
-            this->pc = this->mem[pc++];
+            this->pc += readByte();
         break;
     case 0x11:
         /*
@@ -169,6 +180,61 @@ void Z80::execInstruction() {
          */
         this->mem[this->de.w] = this->a;
         break;
+    case 0x13:
+        /*
+         * INC DE
+         * Increases the value of register pair DE by 1.
+         */
+        this->de.w--;
+        break;
+    case 0x14:
+        /*
+         * INC D
+         * Increases the value of register D by 1.
+         */
+        this->incr(this->d);
+        break;
+    case 0x15:
+        /*
+         * DEC D
+         * Decreases the value of register D by 1.
+         */
+        this->decr(this->d);
+        break;
+    case 0x16:
+        /*
+         * LD D, N
+         * Loads byte into D
+         */
+        this->d = readByte();
+        break;
+    case 0x17:
+        /*
+         * RLA
+         * Rotates register A left and copies bit 7 into the carry flag
+         * and the previous value of the carry flag into bit 0.
+         */
+    {
+        uint8_t prev_carry = (this->f & this->flagC);
+        this->f = this->f & (((this->a & 0x80) ? this->flagC : 0) |
+                             this->flagS | this->flagZ | this->flagPV);
+        this->a = ((uint8_t)(this->a << 1) | (prev_carry));
+    }
+    break;
+    case 0x18:
+        /*
+         * JR N
+         * Adds signed byte N to to the program counter.
+         */
+        this->pc += readByte();
+        break;
+    case 0x19:
+        /*
+         * ADD HL, DE
+         * The value of DE is added to HL
+         */
+        this->addHL(this->de.w);
+        break;
 
     case 0x76:
         // HALT
@@ -181,9 +247,21 @@ void Z80::execInstruction() {
 
     // Fall-through case for unsupported/unimplemented opcodes.
     default:
-        warnUnsupportedOpcode(opcode);
+        warnUnsupportedOpcode();
         break;
     }
+}
+
+uint8_t Z80::readByte() {
+    uint8_t value = 0;
+    value = this->mem[this->pc++];
+    return value;
+}
+
+uint8_t Z80::readByte(uint16_t counter) {
+    uint8_t value = 0;
+    value = this->mem[counter];
+    return value;
 }
 
 uint16_t Z80::read2Bytes(uint16_t counter) {
@@ -195,9 +273,12 @@ uint16_t Z80::read2Bytes(uint16_t counter) {
 
 void Z80::setFlagsSZPV(unsigned int i) {
     uint8_t b = (uint8_t)i;
-    this->flagS = (b&0x80) != 0;
-    this->flagZ = b == 0;
-    this->flagPV = parity(b);
+    this->f = (this->f & (((b&0x80)!=0) << 7)); // Set flag S
+    this->f = (this->f & ((b==0) << 6));        // Set flag Z
+    this->f = (this->f & ((parity(b)) << 2));   // Set flag PV
+//    this->flagS = (b&0x80) != 0;
+//    this->flagZ = b == 0;
+//    this->flagPV = parity(b);
 }
 
 bool Z80::parity(uint8_t b) {
@@ -215,15 +296,15 @@ void Z80::jump(bool flag) {
 }
 
 void Z80::setFlagH(uint8_t b1, uint8_t b2) {
-    this->flagH = ((b1 & 0xf) + (b2 & 0xf)) > 0xf;
+    this->f |= (((b1 & 0xf) + (b2 & 0xf)) > 0xf) << 4;
 }
 
 void Z80::setFlagH(uint16_t b1, uint16_t b2) {
-    this->flagH = (((b1 & 0xff00) + (b2 & 0xff00)) & 0x800) == 0x800;
+    this->f |= ((((b1 & 0xff00) + (b2 & 0xff00)) & 0x800) == 0x800) << 4;
 }
 
 void Z80::setFlagHSub(uint8_t b1, uint8_t b2) {
-    this->flagH = (b2 & 0xf) <= (b1 & 0xf);
+    this->f |= ((b2 & 0xf) <= (b1 & 0xf)) << 4;
 }
 
 void Z80::incr(uint8_t &b) {
@@ -242,7 +323,7 @@ void Z80::decr(uint8_t &b) {
 
 void Z80::addHL(uint16_t value) {
     unsigned int result = this->hl.w + value;
-    this->flagC = (result >> 16) != 0;
+    this->f |= ((result >> 16) != 0);
     this->setFlagH(this->hl.w, value);
     this->flagN = false;
     this->hl.w = ((uint16_t)result);
